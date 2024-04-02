@@ -1,6 +1,6 @@
 import numpy as np
 
-
+#TODO: Update these
 IMU_OFFSET = (0.0, -0.01, 0.004)  # position of IMU relative to the top of the stylus
 STYLUS_LENGTH = 0.1686  # length from the tip to the top of the stylus
 
@@ -24,7 +24,7 @@ def getMarkerCorners(markerLength: float):
 
 
 def getCornersPS(
-    origin: np.ndarray, angleY: float, markerLength: float = 0.013*0.97
+    origin: np.ndarray, angleY: float, markerLength: float = 0.013*0.97 #TODO: update markerLength here
 ) -> np.ndarray:
     cornersWS = getMarkerCorners(markerLength) + origin
     rotated_corners = np.apply_along_axis(lambda x: rotateY(angleY, x), 1, cornersWS)
@@ -34,7 +34,7 @@ def getCornersPS(
 def deg2rad(deg: float) -> float:
     return deg * np.pi / 180
 
-idealMarkerPositions = {
+idealMarkerPositions = { #TODO: update these with dodeca ball data
     99: getCornersPS(np.array([0, -0.01, 0.01], dtype=np.float32), deg2rad(135)),
     98: getCornersPS(np.array([0, -0.01, 0.01], dtype=np.float32), deg2rad(225)),
     97: getCornersPS(np.array([0, -0.01, 0.01], dtype=np.float32), deg2rad(315)),
