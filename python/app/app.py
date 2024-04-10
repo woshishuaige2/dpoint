@@ -75,7 +75,6 @@ class StylusUpdateData(NamedTuple):
 
 ViewUpdateData = CameraUpdateData | StylusUpdateData
 
-
 class CanvasWrapper:
     def __init__(self):
         self.canvas = SceneCanvas(size=CANVAS_SIZE, vsync=False)
@@ -92,7 +91,7 @@ class CanvasWrapper:
             azimuth=0,
             scale_factor=0.3,
         )
-        vertices, faces, normals, texcoords = read_mesh("./mesh/pen.obj")
+        vertices, faces, normals, texcoords = read_mesh("./python/mesh/pen.obj") 
         self.pen_mesh = visuals.Mesh(
             vertices, faces, color=(0.8, 0.8, 0.8, 1), parent=self.view_top.scene
         )
