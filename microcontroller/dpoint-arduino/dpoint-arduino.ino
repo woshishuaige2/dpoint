@@ -168,6 +168,7 @@ void runBle() {
     packet.gyro[2] = imu.readRawGyroZ();
 
     packet.pressure = readPressure();
+    Serial.print("PRESSURE IS: "+packet.pressure);
     
     imuCharacteristic.notify(&packet, sizeof(packet));
 
