@@ -10,6 +10,8 @@ from typing import NamedTuple, Tuple, Callable, Optional
 import time
 import sys
 import multiprocessing as mp
+import app.arucoUtils as dodecapen
+import app.tracker as tracker2
 
 from app.dimensions import IMU_OFFSET, STYLUS_LENGTH, idealMarkerPositions
 
@@ -48,19 +50,12 @@ def read_camera_parameters(filename: str) -> Tuple[np.ndarray, np.ndarray]:
 
 def get_webcam():
     webcam = cv2.VideoCapture(0, cv2.CAP_DSHOW)
-    webcam.set(cv2.CAP_PROP_FPS, 60)
     webcam.set(cv2.CAP_PROP_FRAME_WIDTH, FRAME_WIDTH)
     webcam.set(cv2.CAP_PROP_FRAME_HEIGHT, FRAME_HEIGHT)
-    if not webcam.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG")):
-        raise Exception("Couldn't set FourCC") #test commit
-    webcam.set(cv2.CAP_PROP_AUTOFOCUS, 0)
-    webcam.set(cv2.CAP_PROP_FOCUS, 30)
-    webcam.set(cv2.CAP_PROP_AUTO_EXPOSURE, 1)
-    webcam.set(cv2.CAP_PROP_EXPOSURE, -9)
-    webcam.set(cv2.CAP_PROP_BRIGHTNESS, 127)
-    webcam.set(cv2.CAP_PROP_CONTRAST, 140)
-    webcam.set(cv2.CAP_PROP_GAIN, 200)
-    webcam.set(cv2.CAP_PROP_BUFFERSIZE, 1)
+    webcam.set(cv2.CAP_PROP_SETTINGS, 1) #This will allow users to customize setting with a display panel
+    if not webcam.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G')):    
+        raise Exception("Couldn't set FourCC")
+    
     return webcam
 
 
@@ -394,6 +389,16 @@ def run_tracker(
     frame_count = 0
     auto_focus = True
     current_focus = 30
+    
+    #START HERE FROM DODECA CODE - Camera matrix Calibration   params.mtx, params.dist 
+    post = 2
+    color_cam_matrix = np.load("./python/camera_matrix/color_cam_matrix.npy")
+    color_cam_dist = np.load("./python/camera_matrix/color_cam_dist.npy")
+    # TODO: ArucoUtils.py  ddc_parameters    ddc_txt_data
+    ddc_text_data = dodecapen.ddc_txt_data('./python/dodecapen_assets')
+    ddc_params = dodecapen.ddc_parameters(color_cam_matrix, color_cam_dist)
+    #END HERE
+
     while True:
         frame_start_time = time.perf_counter()
         keypress = cv2.waitKey(1) & 0xFF
@@ -432,6 +437,7 @@ def run_tracker(
                 calibrated = True
             except Exception as e:
                 print("Error calibrating camera, press C to retry.", e)
+                dumy = 1
 
         result = tracker.process_frame(frame)
         processing_end_time = time.perf_counter()
@@ -500,6 +506,20 @@ def run_tracker(
             TEXT_COL,
         )
 
+        #START HERE FROM DODECA CODE
+        ret, rgb_image = webcam.read()
+        if not ret:
+            break
+        depth_image = None
+        if rgb_image is None:
+            time.sleep(0.1)
+            print("No image")
+            continue
+        object_pose = tracker2.object_tracking(rgb_image, ddc_params, ddc_text_data, post)
+        if object_pose is not None:
+            print(object_pose)
+        #END HERE
+        
         cv2.imshow("Tracker", frame)
 
         if recording_enabled and recording_enabled.value:
