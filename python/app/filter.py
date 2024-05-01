@@ -65,6 +65,9 @@ def get_tip_pose(state: Mat) -> Tuple[Mat, Mat]:
     tip_pos = pos - orientation_quat.rotate(
         np.array([0, STYLUS_LENGTH, 0]) + IMU_OFFSET
     )
+    print("in hereeeee\n")
+    print(tip_pos + "\t")
+    print(orientation)
     return (tip_pos, orientation)
 
 
