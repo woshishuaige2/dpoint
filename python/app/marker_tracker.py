@@ -52,7 +52,7 @@ def get_webcam():
     webcam.set(cv2.CAP_PROP_FRAME_WIDTH, FRAME_WIDTH)
     webcam.set(cv2.CAP_PROP_FRAME_HEIGHT, FRAME_HEIGHT)
     if not webcam.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG")):
-        raise Exception("Couldn't set FourCC")
+        raise Exception("Couldn't set FourCC") #test commit
     webcam.set(cv2.CAP_PROP_AUTOFOCUS, 0)
     webcam.set(cv2.CAP_PROP_FOCUS, 30)
     webcam.set(cv2.CAP_PROP_AUTO_EXPOSURE, 1)
