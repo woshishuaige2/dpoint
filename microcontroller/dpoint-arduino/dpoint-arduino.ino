@@ -168,7 +168,6 @@ void runBle() {
     packet.gyro[2] = imu.readRawGyroZ();
 
     packet.pressure = readPressure();
-    Serial.print("PRESSURE IS: "+packet.pressure);
     
     imuCharacteristic.notify(&packet, sizeof(packet));
 
@@ -212,7 +211,7 @@ void sleepUntilDoubleTap() {
 }
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   // while (!Serial && millis() < 1000); // Timeout in case serial disconnected.
   pinMode(LEDR, OUTPUT);
   pinMode(LEDG, OUTPUT);
@@ -263,7 +262,9 @@ void loop() {
       digitalWrite(LEDR, HIGH);
       digitalWrite(LEDG, LOW);
       digitalWrite(LEDB, HIGH);
+      Serial.println("before runBLE");
       runBle();
+      Serial.println("after runBLE");
       digitalWrite(LEDR, HIGH);
       digitalWrite(LEDG, HIGH);
       digitalWrite(LEDB, LOW);

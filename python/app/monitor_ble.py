@@ -72,6 +72,7 @@ async def monitor_ble_async(data_queue: mp.Queue, command_queue: mp.Queue):
         def queue_notification_handler(_: BleakGATTCharacteristic, data: bytearray):
             reading = unpack_imu_data_packet(data)
             data_queue.put(reading)
+            print(reading.pressure)
 
         disconnected_event = asyncio.Event()
         print("Connecting to BLE device...")
