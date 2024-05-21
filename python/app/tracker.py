@@ -65,7 +65,11 @@ def object_tracking(frame, params, text_data, post, show_markers=1):
 		# Convert center coordinate transform into Rodrigues form in shape (1,6)
 		# This is the raw results with no post-processing
 		center_rot_rod, _ = cv2.Rodrigues(center_coordinate_transform[0:3, 0:3])
-		center_trans_rod = center_coordinate_transform[0:3, 3]
+		center_trans_rod = center_coordinate_transform[0:3, 3] 
+  			#[x axis, y axis, z axis]
+			# x axis: left+, right-
+			# y axis: up-, down+
+			# z axis: forward-, backward+
 		center_transform_rod = np.append(center_rot_rod, center_trans_rod.reshape((3, 1))).reshape((6, 1))
 		center_pose_rod_raw = center_transform_rod.T
 		final_pose = center_pose_rod_raw
