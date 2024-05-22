@@ -429,14 +429,14 @@ def run_tracker(
         processing_start_time = time.perf_counter()
 
         if not calibrated or keypress == ord("c"):
-            print("Calibrating...")
+            #print("Calibrating...")
             try:
                 baseRvec, baseTvec = estimate_camera_pose_charuco(
                     frame, camera_matrix, dist_coeffs
                 )
                 calibrated = True
             except Exception as e:
-                print("Error calibrating camera, press C to retry.", e)
+                #print("Error calibrating camera, press C to retry.", e)
                 dumy = 1
 
         result = tracker.process_frame(frame)
@@ -517,7 +517,7 @@ def run_tracker(
             continue
         object_pose = tracker2.object_tracking(rgb_image, ddc_params, ddc_text_data, post)
         if object_pose is not None:
-            print(object_pose)
+            print(object_pose[0, :3])
         #END HERE
         
         cv2.imshow("Tracker", frame)
