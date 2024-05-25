@@ -512,12 +512,22 @@ def run_tracker(
             break
         depth_image = None
         if rgb_image is None:
-            time.sleep(0.1)
+            #time.sleep(0.1)
             print("No image")
             continue
         object_pose = tracker2.object_tracking(rgb_image, ddc_params, ddc_text_data, post)
         if object_pose is not None:
-            print(object_pose[0, :3])
+            cv2.putText(
+                frame,
+                f"Dodeca pos: {object_pose[0, :3]} cm",
+                (10, 210),
+                cv2.FONT_HERSHEY_DUPLEX,
+                1,
+                TEXT_COL,
+            )
+
+        # if object_pose is not None:
+        #     print(object_pose[0, :3])
         #END HERE
         
         cv2.imshow("Tracker", frame)

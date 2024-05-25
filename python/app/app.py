@@ -102,7 +102,7 @@ class CanvasWrapper:
         pen_tip.transform = transforms.MatrixTransform(
             vispy.util.transforms.scale([0.01, 0.01, 0.01])
         )
-
+        
         self.line_data_pos = np.zeros((TRAIL_POINTS, 3), dtype=np.float32)
         self.line_data_col = np.zeros((TRAIL_POINTS, 4), dtype=np.float32)
         # agg looks much better than gl, but only works with 2D data.
@@ -271,7 +271,6 @@ class QueueConsumer(QtCore.QObject):
             if self._should_end:
                 print("Data source saw that it was told to stop")
                 break
-
             try:
                 while self._tracker_queue.qsize() > 2:
                     self._tracker_queue.get()
@@ -298,7 +297,7 @@ class QueueConsumer(QtCore.QObject):
                         (time.time_ns() // 1_000_000, reading)
                     )
                 self._filter.update_imu(reading.accel, reading.gyro)
-                position, orientation = self._filter.get_tip_pose()
+                position, orientation = self._filter.get_tip_pose() #this line is not hit
                 zpos = position[2]
                 if zpos > 0.007:
                     # calibrate pressure baseline using current pressure reading
@@ -316,6 +315,9 @@ class QueueConsumer(QtCore.QObject):
                         / pressure_range,
                     )
                 )
+                pressure=(reading.pressure - pressure_baseline - pressure_offset)/pressure_range
+                print("aaaaaa")
+                print(pressure)
 
         print("Queue consumer finishing")
 
@@ -358,6 +360,7 @@ def main():
     app = use_app("pyqt6")
     app.create()
 
+    #initialization
     tracker_queue = mp.Queue()
     ble_queue = mp.Queue()
     ble_command_queue = mp.Queue()
@@ -369,6 +372,7 @@ def main():
     queue_consumer = QueueConsumer(tracker_queue, ble_queue)
     queue_consumer.moveToThread(data_thread)
 
+    #start camera process
     camera_process = mp.Process(
         target=run_tracker_with_queue,
         args=(tracker_queue, recording_enabled, recording_timestamp),
@@ -376,6 +380,7 @@ def main():
     )
     camera_process.start()
 
+    #start IMU process
     ble_process = mp.Process(
         target=monitor_ble, args=(ble_queue, ble_command_queue), daemon=False
     )
