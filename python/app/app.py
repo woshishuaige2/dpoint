@@ -316,8 +316,6 @@ class QueueConsumer(QtCore.QObject):
                     )
                 )
                 pressure=(reading.pressure - pressure_baseline - pressure_offset)/pressure_range
-                print("aaaaaa")
-                print(pressure)
 
         print("Queue consumer finishing")
 

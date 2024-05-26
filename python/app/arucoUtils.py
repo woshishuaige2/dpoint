@@ -177,7 +177,7 @@ def corners_3d(tf_mat,m_s):
 	Function to give coordinates of the marker corners and transform them using a given transformation matrix
 	Inputs:
 	tf_mat = transformation matrix between face frames and camera frames
-	m_s = marker size-- edge lenght in mm
+	m_s = marker size-- edge length in mm
 	Outputs:
 	corn_pgn_f = corners in camara frame
 	'''
