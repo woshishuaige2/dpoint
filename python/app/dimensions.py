@@ -1,4 +1,5 @@
 import numpy as np
+import app.dodecaMarkerCorners as dodecaMarkerConers
 
 #TODO: Update these
 IMU_OFFSET = (0.0, -0.01, 0.004)  # position of IMU relative to the top of the stylus
@@ -34,13 +35,19 @@ def getCornersPS(
 def deg2rad(deg: float) -> float:
     return deg * np.pi / 180
 
-idealMarkerPositions = { #TODO: update these with dodeca ball data
-    99: getCornersPS(np.array([0, -0.01, 0.01], dtype=np.float32), deg2rad(135)),
-    98: getCornersPS(np.array([0, -0.01, 0.01], dtype=np.float32), deg2rad(225)),
-    97: getCornersPS(np.array([0, -0.01, 0.01], dtype=np.float32), deg2rad(315)),
-    96: getCornersPS(np.array([0, -0.01, 0.01], dtype=np.float32), deg2rad(45)),
-    95: getCornersPS(np.array([0, -0.0395, 0.01], dtype=np.float32), deg2rad(90)),
-    94: getCornersPS(np.array([0, -0.0395, 0.01], dtype=np.float32), deg2rad(180)),
-    93: getCornersPS(np.array([0, -0.0395, 0.01], dtype=np.float32), deg2rad(270)),
-    92: getCornersPS(np.array([0, -0.0395, 0.01], dtype=np.float32), deg2rad(0)),
-}
+idealMarkerPositions = {}
+
+for i in range(12):
+    idealMarkerPositions[i+1] = dodecaMarkerConers.corners_in_cart_sp[i]
+
+# Assign the matrix at index i to the dictionary with key i+1
+# { #TODO: update these with dodeca ball data
+#     99: getCornersPS(np.array([0, -0.01, 0.01], dtype=np.float32), deg2rad(135)),
+#     98: getCornersPS(np.array([0, -0.01, 0.01], dtype=np.float32), deg2rad(225)),
+#     97: getCornersPS(np.array([0, -0.01, 0.01], dtype=np.float32), deg2rad(315)),
+#     96: getCornersPS(np.array([0, -0.01, 0.01], dtype=np.float32), deg2rad(45)),
+#     95: getCornersPS(np.array([0, -0.0395, 0.01], dtype=np.float32), deg2rad(90)),
+#     94: getCornersPS(np.array([0, -0.0395, 0.01], dtype=np.float32), deg2rad(180)),
+#     93: getCornersPS(np.array([0, -0.0395, 0.01], dtype=np.float32), deg2rad(270)),
+#     92: getCornersPS(np.array([0, -0.0395, 0.01], dtype=np.float32), deg2rad(0)),
+# }
